@@ -1,17 +1,68 @@
-import streamlit as st # type: ignore
-import numpy as np # type: ignore
-from solve_cramers_rule import solve_cramers_rule  # Assuming the function is defined separately
+import streamlit as st  # type: ignore
+import numpy as np  # type: ignore
+from fractions import Fraction  # Import fractions module
 
-# Helper function to format numbers for LaTeX
-def format_number(num):
-    """Format numbers for LaTeX output: integers without decimal, floats with decimals."""
-    if num == int(num):  # If the number is an integer
-        return str(int(num))
-    else:  # If the number is a float
-        return f"{num:.2f}"
+# Function to compute determinant manually with Fractions
+def compute_determinant(matrix):
+    """Recursively compute determinant using Fractions for exact arithmetic."""
+    n = len(matrix)
+    if n == 1:
+        return matrix[0][0]
+    elif n == 2:
+        # Determinant of a 2x2 matrix
+        return matrix[0][0] * matrix[1][1] - matrix[0][1] * matrix[1][0]
+
+    # Recursive expansion along the first row
+    determinant = Fraction(0)
+    for col in range(n):
+        sub_matrix = [
+            [matrix[row][c] for c in range(n) if c != col]
+            for row in range(1, n)
+        ]
+        determinant += (
+            (-1) ** col * matrix[0][col] * compute_determinant(sub_matrix)
+        )
+    return determinant
+
+# Solve system of equations using Cramer's Rule with fractional output
+def cramer_rule_fractions(coeff_matrix, const_matrix):
+    try:
+        # Convert input matrix and constants to Fractions
+        A = [[Fraction(num).limit_denominator() for num in row] for row in coeff_matrix]
+        B = [Fraction(num).limit_denominator() for num in const_matrix]
+
+        det_A = compute_determinant(A)
+
+        if det_A == 0:
+            return "The system is unsolvable (determinant is zero)."
+
+        solutions = []
+        n = len(A)
+        for i in range(n):
+            Ai = [row.copy() for row in A]
+            for row_idx in range(n):
+                Ai[row_idx][i] = B[row_idx]  # Replace the i-th column with the constants vector
+            det_Ai = compute_determinant(Ai)
+            fraction_solution = Fraction(det_Ai, det_A).limit_denominator()  # Fractional form
+            solutions.append(fraction_solution)
+
+        return solutions
+
+    except Exception as e:
+        return str(e)
+
+# Helper function to format fractions for LaTeX
+def format_fraction(num):
+    """Convert Fraction object to LaTeX format."""
+    if isinstance(num, Fraction):
+        if num.denominator == 1:  # If the fraction is actually an integer
+            return str(num.numerator)
+        else:
+            return f"\\frac{{{num.numerator}}}{{{num.denominator}}}"
+    return str(num)
 
 # App title and description
-st.title("📊 System of Equations Solver using Cramer's Rule")
+st.title("📊 System of Equations Solver using Cramer's Rule (Fractional Outputs)")
 st.markdown("""
 This app helps you solve systems of linear equations using **Cramer's Rule**.  
 You can enter the coefficients in a square matrix and constants in a column vector. The app will display the matrix and equations, and solve the system for you.
@@ -51,35 +102,23 @@ for i in range(num_vars):
 # Step 4: Display matrices and AX = B
 st.subheader("System Representation: \(AX = B\)")
 latex_matrix_a = "\\begin{bmatrix}" + " \\\\ ".join(
-    [" & ".join(map(format_number, row)) for row in coeff_matrix]
+    [" & ".join(map(str, row)) for row in coeff_matrix]
 ) + "\\end{bmatrix}"
 
 latex_vector_x = "\\begin{bmatrix}" + " \\\\ ".join(variable_names) + "\\end{bmatrix}"
 
-latex_vector_b = "\\begin{bmatrix}" + " \\\\ ".join(map(format_number, const_vector)) + "\\end{bmatrix}"
+latex_vector_b = "\\begin{bmatrix}" + " \\\\ ".join(map(str, const_vector)) + "\\end{bmatrix}"
 
 st.latex(f"{latex_matrix_a} \\cdot {latex_vector_x} = {latex_vector_b}")
 
-# Step 5: Display equations
-st.subheader("Equations:")
-st.markdown("The system of equations is:")
-equations = []
-for i in range(num_vars):
-    equation = " + ".join([f"{format_number(coeff_matrix[i, j])}{variable_names[j]}" for j in range(num_vars)]) + f" = {format_number(const_vector[i])}"
-    equations.append(equation)
-
-# Render each equation in LaTeX
-for eq in equations:
-    st.latex(eq)
-
-# Step 6: Solve the system using Cramer's Rule
+# Step 5: Solve the system using Cramer's Rule with fractional outputs
 if st.button("🔍 Solve"):
     # Validate the inputs
     if len(coeff_matrix) != num_vars or any(len(row) != num_vars for row in coeff_matrix) or len(const_vector) != num_vars:
         st.error("❌ Error: Please ensure the input matrix and vector have the correct dimensions.")
     else:
         # Call the Cramer's Rule function
-        solution = solve_cramers_rule(coeff_matrix.tolist(), const_vector.tolist())
+        solution = cramer_rule_fractions(coeff_matrix.tolist(), const_vector.tolist())
         
         if isinstance(solution, str):  # Error message
             st.error(solution)
@@ -87,17 +126,9 @@ if st.button("🔍 Solve"):
             st.success("✅ Solution Found!")
             st.markdown("The solutions for the variables are:")
             for i, val in enumerate(solution):
-                st.latex(f"{variable_names[i]} = {format_number(val)}")
+                st.latex(f"{variable_names[i]} = {format_fraction(val)}")
 
 # Footer
-st.markdown("---")
-# st.markdown("Developed with ❤️ using Streamlit. Supports systems up to 10 variables.")
-# st.markdown("""
-# ---
-# **Developed by [Ashish Patel](https://github.com/ashishpatel8736)**  
-# Powered by **Streamlit** and **Scikit-learn**.
-# """)
-
 # Displaying main message
 st.markdown("<h1 style='text-align: center;'>Developed with ❤️ using Streamlit</h1>", unsafe_allow_html=True)
 st.markdown("<h3 style='text-align: center;'>Supports systems up to 10 variables</h3>", unsafe_allow_html=True)
@@ -109,6 +140,7 @@ st.markdown("---")
 st.markdown("""
 <div style='text-align: center;'>
     <p><strong>Developed by <a href='https://github.com/ashishpatel8736' target='_blank'>Ashish Patel</a></strong></p>
-    <p>Powered by <strong>Streamlit</strong> and <strong>Scikit-learn</strong></p>
+    <p>Powered by <strong>Streamlit</strong></p>
 </div>
 """, unsafe_allow_html=True)
+
