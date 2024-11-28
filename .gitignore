@@ -1,0 +1,40 @@
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+lapy/
+
+*.lapy
+
+
+# IDEs and Editors
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Jupyter Notebooks
+.ipynb_checkpoints/
+
+# Log files
+*.log
+
+# Python egg distribution
+*.egg
+*.egg-info/
+
+# Test coverage
+.coverage
+nosetests.xml
+coverage.xml
+*.cover
+
+# Dist folders
+build/
+dist/
+*.egg-info/
