@@ -50,9 +50,10 @@ Where:
 - \(B\) is the constant vector.
 
 Using **Cramer's Rule**:
-\[
+<!-- \[
 x_i = rac{	ext{det}(A_i)}{	ext{det}(A)}, \quad i = 1, 2, \dots, n
-\]
+\] -->
+![Cramer's Rule](https://latex.codecogs.com/svg.latex?x_i%20%3D%20%5Cfrac%7B%5Ctext%7Bdet%7D%28A_i%29%7D%7B%5Ctext%7Bdet%7D%28A%29%7D%2C%20i%20%3D%201%2C%202%2C%20%5Cdots%2C%20n)
 
 Here:
 - \(	ext{det}(A)\): Determinant of the coefficient matrix.
