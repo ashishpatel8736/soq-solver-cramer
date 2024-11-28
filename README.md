@@ -11,7 +11,7 @@ Welcome to the **System of Equations Solver**! This app, built with [Streamlit](
   - Input your system of equations as a **coefficient matrix (A)** and a **constant vector (B)**.
   - Dynamically display the system in the form \(AX = B\), where:
     - \(A\): Coefficient matrix
-    - \(X\): Variables (\(x, y, z, \dots\))
+    - \(X\): Variables (x, y, z,...)
     - \(B\): Constants vector
   - Beautiful LaTeX-rendered matrices and equations.
 
@@ -29,42 +29,15 @@ Welcome to the **System of Equations Solver**! This app, built with [Streamlit](
   - Easily adapt to any problem size.
 
 - **Real-time Solutions**
-    - Get solutions for \(x, y, z, \dots\) instantly after clicking **"Solve"**.
+    - Get solutions for \(x, y, z,...) instantly after clicking **"Solve"**.
   - Handles errors gracefully if the system is unsolvable, such as when the determinant of the coefficient matrix is zero.
-
-
----
-
-## 🛠️ How It Works
-
-The app solves a system of linear equations using **Cramer's Rule**, a method in linear algebra that calculates solutions by finding determinants of matrices.
-
-The system of equations is represented as:
-\[
-AX = B
-\]
-
-Where:
-- \(A\) is the coefficient matrix.
-- \(X\) is the variable vector (e.g., \(x, y, z, \dots\)).
-- \(B\) is the constant vector.
-
-Using **Cramer's Rule**:
-<!-- \[
-x_i = rac{	ext{det}(A_i)}{	ext{det}(A)}, \quad i = 1, 2, \dots, n
-\] -->
-![Cramer's Rule](https://latex.codecogs.com/svg.latex?x_i%20%3D%20%5Cfrac%7B%5Ctext%7Bdet%7D%28A_i%29%7D%7B%5Ctext%7Bdet%7D%28A%29%7D%2C%20i%20%3D%201%2C%202%2C%20%5Cdots%2C%20n)
-
-Here:
-- \(	ext{det}(A)\): Determinant of the coefficient matrix.
-- \(	ext{det}(A_i)\): Determinant of the matrix \(A\) with the \(i^{th}\) column replaced by the constants vector \(B\).
 
 ---
 
 ## 🖥️ Screenshots
 
 ### 1. Input System of Equations
-Input the coefficient matrix (\(A\)) and constants vector (\(B\)) using a simple interface:
+Input the coefficient matrix \(A\) and constants vector \(B\) using a simple interface:
 
 ![Input Matrix](equation_ss.png)
 
@@ -78,7 +51,7 @@ View your system of equations in matrix form:
 ---
 
 ### 3. Solution
-Get the solution for \(x, y, z, \dots\) in real-time:
+Get the solution for (x, y, z,...) in real-time:
 
 ![Solution](solu_ss.png)
 
@@ -109,72 +82,6 @@ Get the solution for \(x, y, z, \dots\) in real-time:
    ```
 
 4. Open the app in your browser at [http://localhost:8501](http://localhost:8501).
-
----
-
-## 📚 Example Usage
-
-### Example 1: Integer Inputs
-System:
-\[
-2x + y - z = 3
-\]
-\[
-x + y + z = 1
-\]
-\[
-x - 2y - 3z = 4
-\]
-
-Input:
-\[
-A = egin{bmatrix}
-2 & 1 & -1 \
-1 & 1 & 1 \
-1 & -2 & -3
-\end{bmatrix}, \quad
-B = egin{bmatrix}
-3 \
-1 \
-4
-\end{bmatrix}
-\]
-
-Solution:
-\[
-x = 2, \quad y = -1, \quad z = 0
-\]
-
-### Example 2: Float Inputs
-System:
-\[
-2.5x + 1.2y - 1.1z = 3.3
-\]
-\[
-x + y + z = 1
-\]
-\[
-x - 2.2y - 3.3z = 4.1
-\]
-
-Input:
-\[
-A = egin{bmatrix}
-2.5 & 1.2 & -1.1 \
-1.0 & 1.0 & 1.0 \
-1.0 & -2.2 & -3.3
-\end{bmatrix}, \quad
-B = egin{bmatrix}
-3.3 \
-1.0 \
-4.1
-\end{bmatrix}
-\]
-
-Solution:
-\[
-x = 2.00, \quad y = -1.00, \quad z = 0.00
-\]
 
 ---
 
